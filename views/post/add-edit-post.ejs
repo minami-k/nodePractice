@@ -7,7 +7,7 @@
     <%- include('../includes/nav.ejs')%>
 <!--     <h1>Editing mode: <%= editing %></h1>
  -->    <main>
-        <form action="<% if(editing) { %>/edit-post<% }else{ %>/add-post<% } %>" method="post" class="text-center mt-5">
+        <form action="<% if(editing) { %>/author/edit-post<% }else{ %>/author/add-post<% } %>" method="post" class="text-center mt-5">
             <div class="mb-3">
                 <label for="title" class="pb-2">Title</label><br>
                 <input style="width: 50%;" type="text" name="title" value="<% if(editing) { %><%= article.title %><% } %>" />
