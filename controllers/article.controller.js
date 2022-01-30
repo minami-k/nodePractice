@@ -2,19 +2,18 @@ const Article = require("../models/article.model");
 const Like = require("../models/likes.model")
 
 exports.getPosts = (req, res, next) => {
-  Article.fetchAll()
-    .then((articles) => {
-      const tempArticle = articles.map((i) => ({
-        ...i,
-        description: `${i.description.slice(0, 100)}.....`,
-      }));
+  Article.find()
+  .then((articles) => {
 
-      res.render("post/article-list", {
-        pageTitle: "All Posts",
-        articles: tempArticle,
-      });
-    })
-    .catch((err) => console.log(err));
+    const tempArticle = articles.map(i => ({ ...i, description: `${i.description.slice(0, 100)}.....`}))
+    
+    res.render("post/article-list", {
+      pageTitle: "All Posts",
+      articles: tempArticle,
+      isAuth: req.user
+    });
+  })
+  .catch((err) => console.log(err));
 };
 
 exports.getPostById = (req, res, next) => {

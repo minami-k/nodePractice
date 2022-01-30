@@ -21,11 +21,11 @@ exports.getAddPost = (req, res, next) => {
   });
 };
 
-exports.postAddPost = (req, res, next) => {
+exports.postAddPost = async (req, res, next) => {
   const { title, imageUrl, description } = req.body;
 
-  const article = new Article(title, imageUrl, description);
-  article.save();
+  const article = new Article({title, imageUrl, description});
+  await article.save();
   res.redirect("/");
 };
 
@@ -47,10 +47,20 @@ exports.getEditPost = (req, res, next) => {
 
 exports.postEditPost = (req, res, next) => {
   const { postId, title, imageUrl, description } = req.body;
-  const updatedPost = new Article(title, imageUrl, description);
+
+  Article.findById(postId)
+  .then((article) => {
+    article.title = title
+    article.imageUrl = imageUrl
+    article.description = description
+    return Article.save()
+  }).then(() => {
+    res.redirect('/')
+  }).catch(err => console.log(err))
+/*   const updatedPost = new Article(title, imageUrl, description);
   updatedPost.edit(postId);
   res.redirect("/author");
-};
+ */};
 
 exports.postDeletePost = (req, res, next) => {
   const postId = req.body.postId;

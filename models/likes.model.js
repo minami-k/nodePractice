@@ -31,7 +31,7 @@ module.exports = class Likes{
                 detail.info = [...detail.info, updatedArticle]
             }
 
-            detail.totalLikes = detail.totalLikes + likeNum
+            detail.totalLikes = detail.totalLikes + parseInt(likeNum)
 
             fs.writeFile(postPath, JSON.stringify(detail), err => { console.log(err)})
         })

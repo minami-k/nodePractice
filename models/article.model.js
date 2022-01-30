@@ -1,5 +1,33 @@
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const articleSchema = new Schema({
+    title: {
+        type: String,
+        required:true
+    }, 
+    imageUrl: {
+        type: String,
+        required:true
+    },
+    description: {
+        type: String,
+        required:true
+    }
+})
+
+module.exports = mongoose.model('Article', articleSchema)
+
+
+
+
+
+
+
+// For mongoDB
+
 /* const db = require('../util/db-mysql.js')
- */
+
 const mongodb = require('mongodb')
 const getDB = require('../util/db-mongo').getDB
 const fs = require('fs')
@@ -49,5 +77,5 @@ module.exports = class Articles {
     }
 
 }
-
+ */
     
