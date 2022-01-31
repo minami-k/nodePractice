@@ -1,6 +1,14 @@
 const Article = require("../models/article.model");
 
-exports.getPosts = (req, res, next) => {
+const getById = (postId) => {
+  return Article.findById(postId, (err, data) => {
+    if(err) console.log(err);
+    return data
+  }).clone()
+
+}
+
+/* exports.getPosts = (req, res, next) => {
     Article.fetchAll()
       .then((articles) => {
   
@@ -13,6 +21,19 @@ exports.getPosts = (req, res, next) => {
       })
       .catch((err) => console.log(err));
   };
+ */
+  
+exports.getPosts = (req, res, next) => {
+  Article.find((err, data) => {
+    if (err) console.log(err);
+
+    res.render("author/author-article-list", {
+      pageTitle: "All Posts",
+      articles: data,
+      isAuth: req.user,
+    });
+  })
+}
 
 exports.getAddPost = (req, res, next) => {
   res.render("post/add-edit-post", {
@@ -53,7 +74,7 @@ exports.postEditPost = (req, res, next) => {
     article.title = title
     article.imageUrl = imageUrl
     article.description = description
-    return Article.save()
+    return article.save()
   }).then(() => {
     res.redirect('/')
   }).catch(err => console.log(err))

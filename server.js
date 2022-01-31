@@ -4,39 +4,41 @@ const bodyParser = require('body-parser')
 const path = require('path')
 //const mongoConnect = require('./util/db-mongo').mongoConnect
 const mongoose = require('mongoose')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 const articleRoute = require('./routes/article.route')
 const authorRoute = require('./routes/author.route')
+const userRoute = require('./routes/user.route') 
+
 const User = require('./models/user.model')
 
 const app = express()
+const store = new MongoDBStore({
+    uri: process.env.MONGODB_URL,
+    collection: 'sessions'
+})
 
 app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(session({
+    secret: 'thisIsSecretString',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+}))
 
-//dummy authentification flow
-/* 
 app.use((req,res,next) => {
-    const user = new User('admin', 'minamikoma24@gmail.com')
-    user.save().then(result => {
-        console.log(result);
-        next()
-    }).catch(err => console.log(err))
-
-    //login
-    User.findById('61f43a440aa89fa93ffbd44d')
-    .then(user => {
-        console.log(user);
-        req.user = user
-        next()
-    })
-    .catch(err => console.log(err))
-}) */
+    console.log('auth: ', req.session.isLoggedIn);
+    next()
+})
 
 app.use('/author', authorRoute)
 app.use(articleRoute)
+app.use(userRoute)
+
 
 app.use((req,res,next) => {
     res.status(404).render('404', {pageTitle: 'Page Not Found'})
@@ -49,11 +51,6 @@ const PORT = process.env.PORT || 8000
 })
  */
 
-mongoose.connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-})
-.then(() => {
+mongoose.connect(process.env.MONGODB_URL, () => {
     app.listen(PORT)
 })
-.catch(err => console.log(err))
-

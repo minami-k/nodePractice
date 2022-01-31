@@ -22,8 +22,11 @@
                         <img src="http://localhost:8000/<%= article.imageUrl %>" alt="<%= article.title %>" width="100%">
                     </div>
                     <div class="p-3">
-                        <%= article.description %>
-                    </div>
+                        <% if(article.description.length >=20){ %>
+                            <%= article.description.slice(0, 20).concat('...') %>
+                        <% }else { %>
+                            <%= article.description %>
+                        <% } %>                    </div>
                     <div>
                         <div>
                             <a href="/posts/<%= article._id %>" class="btn btn-secondary text-white">Read more</a>
